@@ -14,7 +14,7 @@ const createWindow = () => {
     width: 1200,
     height: 800,
     webPreferences: {
-      preload: path.join(__dirname, 'electron/preload.js'),
+      preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: false,
       contextIsolation: true,
       // 启用Node.js集成，使预加载脚本可以使用Node.js模块
@@ -42,7 +42,7 @@ const createWindow = () => {
   if (process.env.NODE_ENV === 'development') {
     mainWindow.loadURL('http://localhost:5173');
     // 在开发模式下打开开发者工具
-    mainWindow.webContents.openDevTools({ mode: 'undocked' });
+    // mainWindow.webContents.openDevTools({ mode: 'undocked' });
   } else {
     mainWindow.loadFile(path.join(__dirname, 'dist/index.html'));
   }
