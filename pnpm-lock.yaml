@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@electron/remote':
+        specifier: ^2.1.3
+        version: 2.1.3(electron@39.2.4)
       electron-squirrel-startup:
         specifier: ^1.0.1
         version: 1.0.1
@@ -20,12 +23,12 @@ importers:
         version: 24.10.1
       '@vitejs/plugin-vue':
         specifier: ^6.0.1
-        version: 6.0.2(vite@6.4.1(@types/node@24.10.1))(vue@3.5.25(typescript@5.9.3))
+        version: 6.0.2(vite@7.2.6(@types/node@24.10.1))(vue@3.5.25(typescript@5.9.3))
       '@vue/tsconfig':
         specifier: ^0.8.1
         version: 0.8.1(typescript@5.9.3)(vue@3.5.25(typescript@5.9.3))
       concurrently:
-        specifier: ^9.0.1
+        specifier: ^9.2.1
         version: 9.2.1
       cross-env:
         specifier: ^7.0.3
@@ -38,18 +41,18 @@ importers:
         version: 26.0.12(electron-builder-squirrel-windows@26.0.12)
       electron-vite:
         specifier: ^4.0.1
-        version: 4.0.1(vite@6.4.1(@types/node@24.10.1))
+        version: 4.0.1(vite@7.2.6(@types/node@24.10.1))
       typescript:
         specifier: ~5.9.3
         version: 5.9.3
       vite:
-        specifier: ^6.1.0
-        version: 6.4.1(@types/node@24.10.1)
+        specifier: ^7.2.4
+        version: 7.2.6(@types/node@24.10.1)
       vue-tsc:
-        specifier: ^3.0.0
+        specifier: ^3.1.4
         version: 3.1.5(typescript@5.9.3)
       wait-on:
-        specifier: ^8.0.1
+        specifier: ^8.0.5
         version: 8.0.5
 
 packages:
@@ -175,6 +178,11 @@ packages:
     resolution: {integrity: sha512-VW++CNSlZwMYP7MyXEbrKjpzEwhB5kDNbzGtiPEjwYysqyTCF+YbNJ210Dj3AjWsGSV4iEEwNkmJN9yGZmVvmw==}
     engines: {node: '>=12.13.0'}
     hasBin: true
+
+  '@electron/remote@2.1.3':
+    resolution: {integrity: sha512-XlpxC8S4ttj/v2d+PKp9na/3Ev8bV7YWNL7Cw5b9MAWgTphEml7iYgbc7V0r9D6yDOfOkj06bchZgOZdlWJGNA==}
+    peerDependencies:
+      electron: '>= 13.0.0'
 
   '@electron/universal@2.0.1':
     resolution: {integrity: sha512-fKpv9kg4SPmt+hY7SVBnIYULE9QJl8L3sCfcBsnqbJwwBwAeTLokJ9TRt9y7bK0JAzIW2y78TVVjvnQEms/yyA==}
@@ -1908,19 +1916,19 @@ packages:
     resolution: {integrity: sha512-veufcmxri4e3XSrT0xwfUR7kguIkaxBeosDg00yDWhk49wdwkSUrvvsm7nc75e1PUyvIeZj6nS8VQRYz2/S4Xg==}
     engines: {node: '>=0.6.0'}
 
-  vite@6.4.1:
-    resolution: {integrity: sha512-+Oxm7q9hDoLMyJOYfUYBuHQo+dkAloi33apOPP56pzj+vsdJDzr+j1NISE5pyaAuKL4A3UD34qd0lx5+kfKp2g==}
-    engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
+  vite@7.2.6:
+    resolution: {integrity: sha512-tI2l/nFHC5rLh7+5+o7QjKjSR04ivXDF4jcgV0f/bTQ+OJiITy5S6gaynVsEM+7RqzufMnVbIon6Sr5x1SDYaQ==}
+    engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
     peerDependencies:
-      '@types/node': ^18.0.0 || ^20.0.0 || >=22.0.0
+      '@types/node': ^20.19.0 || >=22.12.0
       jiti: '>=1.21.0'
-      less: '*'
+      less: ^4.0.0
       lightningcss: ^1.21.0
-      sass: '*'
-      sass-embedded: '*'
-      stylus: '*'
-      sugarss: '*'
+      sass: ^1.70.0
+      sass-embedded: ^1.70.0
+      stylus: '>=0.54.8'
+      sugarss: ^5.0.0
       terser: ^5.16.0
       tsx: ^4.8.1
       yaml: ^2.4.2
@@ -2220,6 +2228,10 @@ snapshots:
     transitivePeerDependencies:
       - bluebird
       - supports-color
+
+  '@electron/remote@2.1.3(electron@39.2.4)':
+    dependencies:
+      electron: 39.2.4
 
   '@electron/universal@2.0.1':
     dependencies:
@@ -2529,10 +2541,10 @@ snapshots:
       '@types/node': 24.10.1
     optional: true
 
-  '@vitejs/plugin-vue@6.0.2(vite@6.4.1(@types/node@24.10.1))(vue@3.5.25(typescript@5.9.3))':
+  '@vitejs/plugin-vue@6.0.2(vite@7.2.6(@types/node@24.10.1))(vue@3.5.25(typescript@5.9.3))':
     dependencies:
       '@rolldown/pluginutils': 1.0.0-beta.50
-      vite: 6.4.1(@types/node@24.10.1)
+      vite: 7.2.6(@types/node@24.10.1)
       vue: 3.5.25(typescript@5.9.3)
 
   '@volar/language-core@2.4.23':
@@ -3075,7 +3087,7 @@ snapshots:
 
   electron-to-chromium@1.5.262: {}
 
-  electron-vite@4.0.1(vite@6.4.1(@types/node@24.10.1)):
+  electron-vite@4.0.1(vite@7.2.6(@types/node@24.10.1)):
     dependencies:
       '@babel/core': 7.28.5
       '@babel/plugin-transform-arrow-functions': 7.27.1(@babel/core@7.28.5)
@@ -3083,7 +3095,7 @@ snapshots:
       esbuild: 0.25.12
       magic-string: 0.30.21
       picocolors: 1.1.1
-      vite: 6.4.1(@types/node@24.10.1)
+      vite: 7.2.6(@types/node@24.10.1)
     transitivePeerDependencies:
       - supports-color
 
@@ -4049,7 +4061,7 @@ snapshots:
       extsprintf: 1.4.1
     optional: true
 
-  vite@6.4.1(@types/node@24.10.1):
+  vite@7.2.6(@types/node@24.10.1):
     dependencies:
       esbuild: 0.25.12
       fdir: 6.5.0(picomatch@4.0.3)

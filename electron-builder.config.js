@@ -1,24 +1,26 @@
 /**
- * @type {import('electron-builder').Configuration}
  * @see https://www.electron.build/configuration/configuration
  */
-const config = {
-  appId: 'com.electron_vue.app',
-  productName: 'Electron Vue App',
+module.exports = {
+  appId: "com.example.electronvue",
+  productName: "Electron Vue 小工具箱",
   directories: {
-    output: 'release/${version}'
+    output: "release/${version}"
   },
   files: [
-    'dist/**/*',
-    'dist-electron/**/*'
+    "dist/**/*",
+    "main.cjs",
+    "electron/**/*"
   ],
   extends: null,
   win: {
-    icon: 'public/vite.svg',
+    icon: "public/vite.svg",
     target: [
       {
-        target: 'nsis',
-        arch: ['x64']
+        target: "nsis",
+        arch: [
+          "x64"
+        ]
       }
     ]
   },
@@ -29,13 +31,15 @@ const config = {
     deleteAppDataOnUninstall: false
   },
   mac: {
-    icon: 'public/vite.svg',
-    target: ['dmg']
+    icon: "public/vite.svg",
+    target: [
+      "dmg"
+    ]
   },
   linux: {
-    icon: 'public/vite.svg',
-    target: ['AppImage']
+    icon: "public/vite.svg",
+    target: [
+      "AppImage"
+    ]
   }
 }
-
-module.exports = config
