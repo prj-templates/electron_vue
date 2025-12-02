@@ -49,9 +49,15 @@
           </svg>
         </div>
         <div class="window-controls">
-          <button class="minimize-btn" @click="minimizeWindow" title="Minimize">─</button>
-          <button class="maximize-btn" @click="toggleMaximize" @dblclick.stop title="Maximize/Restore">{{ isMaximized ? '❐' : '□' }}</button>
-          <button class="close-btn" @click="closeWindow" title="Close">×</button>
+          <button class="minimize-btn" @click="minimizeWindow" title="Minimize">
+            <span class="control-icon">─</span>
+          </button>
+          <button class="maximize-btn" @click="toggleMaximize" @dblclick.stop :title="isMaximized ? 'Restore Down' : 'Maximize'">
+            <span class="control-icon">{{ isMaximized ? '❐' : '□' }}</span>
+          </button>
+          <button class="close-btn" @click="closeWindow" title="Close">
+            <span class="control-icon">×</span>
+          </button>
         </div>
       </div>
     </div>
@@ -294,6 +300,18 @@ onUnmounted(() => {
   outline: none;
   font-size: 14px;
   -webkit-app-region: no-drag;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.control-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
 }
 
 .window-controls button:hover {
