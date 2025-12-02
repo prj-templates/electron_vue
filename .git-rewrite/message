@@ -1,1 +1,1 @@
-Initial commit: Electron + Vue3 + Vite + TypeScript project template
+Update gitignore to exclude build directories and add gitattributes for line ending normalization
