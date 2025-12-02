@@ -29,5 +29,5 @@
     "vue-tsc": "^3.0.0",
     "wait-on": "^8.0.1"
   },
-  "main": "main.cjs"
+  "main": "electron/main.cjs"
 }
