@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -6,9 +6,11 @@ if (require('electron-squirrel-startup')) {
   app.quit();
 }
 
+let mainWindow;
+
 const createWindow = () => {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
     webPreferences: {
@@ -16,6 +18,8 @@ const createWindow = () => {
       nodeIntegration: false,
       contextIsolation: true,
     },
+    frame: false, // 隐藏原生窗口框架
+    titleBarStyle: 'hidden', // 隐藏标题栏
   });
 
   // Load the local URL in development, or the built file in production.
@@ -26,6 +30,42 @@ const createWindow = () => {
   } else {
     mainWindow.loadFile(path.join(__dirname, 'dist-web/index.html'));
   }
+  
+  // 处理窗口控制IPC消息
+  ipcMain.on('window-minimize', () => {
+    if (mainWindow) {
+      mainWindow.minimize();
+    }
+  });
+
+  ipcMain.on('window-maximize', () => {
+    if (mainWindow) {
+      if (mainWindow.isMaximized()) {
+        mainWindow.unmaximize();
+      } else {
+        mainWindow.maximize();
+      }
+    }
+  });
+
+  ipcMain.on('window-unmaximize', () => {
+    if (mainWindow) {
+      mainWindow.unmaximize();
+    }
+  });
+
+  ipcMain.on('window-close', () => {
+    if (mainWindow) {
+      mainWindow.close();
+    }
+  });
+
+  ipcMain.handle('window-is-maximized', () => {
+    if (mainWindow) {
+      return mainWindow.isMaximized();
+    }
+    return false;
+  });
 };
 
 // This method will be called when Electron has finished

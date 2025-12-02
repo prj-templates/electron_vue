@@ -1,9 +1,9 @@
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
+  color-scheme: dark;
   color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
 
@@ -11,6 +11,48 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+  
+  /* 默认主题变量 */
+  --title-bar-background: #3c3c3c;
+  --title-bar-foreground: white;
+  --title-bar-border: #000000;
+  
+  --side-bar-background: #333333;
+  --side-bar-foreground: #cccccc;
+  --side-bar-border: #252526;
+  
+  --editor-background: #1e1e1e;
+  --editor-foreground: #d4d4d4;
+  
+  --status-bar-background: #007acc;
+  --status-bar-foreground: white;
+  
+  --tab-active-background: #1e1e1e;
+  --tab-inactive-background: #2d2d2d;
+  --tab-active-foreground: white;
+  --tab-inactive-foreground: white;
+  --tab-border: #1a1a1a;
+  
+  --tool-bar-background: #333333;
+  
+  --button-background: #1a1a1a;
+  --button-foreground: white;
+  --input-background: #3c3c3c;
+  --input-foreground: #cccccc;
+  --input-border: #3c3c3c;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
 }
 
 a {
@@ -20,14 +62,6 @@ a {
 }
 a:hover {
   color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
 }
 
 h1 {
@@ -42,7 +76,8 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: var(--button-background);
+  color: var(--button-foreground);
   cursor: pointer;
   transition: border-color 0.25s;
 }
@@ -59,21 +94,26 @@ button:focus-visible {
 }
 
 #app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  height: 100vh;
+  overflow: hidden;
+  background-color: var(--editor-background);
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+/* 滚动条样式 */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--side-bar-background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #3c3c3c;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555555;
 }

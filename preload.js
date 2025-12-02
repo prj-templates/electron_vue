@@ -7,6 +7,21 @@ const api = {
   },
   receiveMessage: (callback) => {
     ipcRenderer.on('receive-message', (_event, data) => callback(data));
+  },
+  minimizeWindow: () => {
+    ipcRenderer.send('window-minimize');
+  },
+  maximizeWindow: () => {
+    ipcRenderer.send('window-maximize');
+  },
+  closeWindow: () => {
+    ipcRenderer.send('window-close');
+  },
+  unmaximizeWindow: () => {
+    ipcRenderer.send('window-unmaximize');
+  },
+  isMaximized: () => {
+    return ipcRenderer.invoke('window-is-maximized');
   }
 };
 

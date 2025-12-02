@@ -1,6 +1,10 @@
 import { createApp } from 'vue'
 import './style.css'
 import App from './App.vue'
+import { themeManager } from './themes/themeManager'
+
+// 初始化主题
+themeManager.setCurrentTheme('dark')
 
 // Check if we're in Electron environment
 const isElectron = navigator.userAgent.indexOf('Electron') >= 0
