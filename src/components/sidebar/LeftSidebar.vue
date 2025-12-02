@@ -1,10 +1,14 @@
 <template>
-  <div class="left-sidebar" :class="{ collapsed: isCollapsed }">
+  <div 
+    class="left-sidebar" 
+    :class="{ collapsed: isCollapsed }"
+    :style="{ width: isCollapsed ? '40px' : sidebarWidth + 'px' }"
+  >
     <div class="sidebar-toolbar">
       <div 
         class="toolbar-item" 
         :class="{ active: activePanel === 'explorer' }"
-        @click="setActivePanel('explorer')"
+        @click="togglePanel('explorer')"
         title="Explorer"
       >
         <span>📁</span>
@@ -12,7 +16,7 @@
       <div 
         class="toolbar-item" 
         :class="{ active: activePanel === 'search' }"
-        @click="setActivePanel('search')"
+        @click="togglePanel('search')"
         title="Search"
       >
         <span>🔍</span>
@@ -20,7 +24,7 @@
       <div 
         class="toolbar-item" 
         :class="{ active: activePanel === 'git' }"
-        @click="setActivePanel('git')"
+        @click="togglePanel('git')"
         title="Git"
       >
         <span>⎇</span>
@@ -28,7 +32,7 @@
       <div 
         class="toolbar-item" 
         :class="{ active: activePanel === 'debug' }"
-        @click="setActivePanel('debug')"
+        @click="togglePanel('debug')"
         title="Debug"
       >
         <span>🐞</span>
@@ -36,14 +40,17 @@
       <div 
         class="toolbar-item" 
         :class="{ active: activePanel === 'extensions' }"
-        @click="setActivePanel('extensions')"
+        @click="togglePanel('extensions')"
         title="Extensions"
       >
         <span>🧩</span>
       </div>
     </div>
     
-    <div class="sidebar-content-wrapper" v-show="!isCollapsed">
+    <div 
+      class="sidebar-content-wrapper" 
+      v-show="!isCollapsed"
+    >
       <div class="sidebar-content" v-show="activePanel === 'explorer'">
         <div class="sidebar-section">
           <h3>Explorer</h3>
@@ -123,11 +130,25 @@
       </div>
     </div>
     
-    <div class="sidebar-toggle" @click="toggleSidebar" v-show="!isCollapsed">
-      <span>◀</span>
+    <div 
+      class="resize-handle" 
+      v-show="!isCollapsed"
+      @mousedown="startResizing"
+    ></div>
+    
+    <div 
+      class="sidebar-toggle" 
+      @click="toggleSidebar"
+      v-show="!isCollapsed"
+    >
+      <span class="toggle-icon">◀</span>
     </div>
-    <div class="sidebar-toggle-collapsed" @click="toggleSidebar" v-show="isCollapsed">
-      <span>▶</span>
+    <div 
+      class="sidebar-toggle-collapsed" 
+      @click="toggleSidebar"
+      v-show="isCollapsed"
+    >
+      <span class="toggle-icon">▶</span>
     </div>
   </div>
 </template>
@@ -137,43 +158,81 @@ import { ref } from 'vue'
 
 const isCollapsed = ref(false)
 const activePanel = ref('explorer')
+const sidebarWidth = ref(250)
+const isResizing = ref(false)
+
+// 切换面板显示/隐藏
+const togglePanel = (panel: string) => {
+  if (isCollapsed.value) {
+    // 如果侧边栏已折叠，点击图标时展开侧边栏并显示对应面板
+    isCollapsed.value = false
+    activePanel.value = panel
+  } else {
+    // 如果侧边栏已展开
+    if (activePanel.value === panel) {
+      // 点击当前面板则隐藏侧边栏
+      isCollapsed.value = true
+    } else {
+      // 点击其他面板则切换到该面板
+      activePanel.value = panel
+    }
+  }
+}
 
 const toggleSidebar = () => {
   isCollapsed.value = !isCollapsed.value
 }
 
-const setActivePanel = (panel: string) => {
-  // 如果侧边栏已折叠，点击图标时展开侧边栏
-  if (isCollapsed.value) {
-    isCollapsed.value = false
+// 拖拽调整宽度功能
+const startResizing = (e: MouseEvent) => {
+  isResizing.value = true
+  const startX = e.clientX
+  const startWidth = sidebarWidth.value
+  
+  const doDrag = (e: MouseEvent) => {
+    const newWidth = startWidth + e.clientX - startX
+    // 限制最小宽度为150px，最大宽度为500px
+    sidebarWidth.value = Math.max(150, Math.min(500, newWidth))
   }
-  activePanel.value = panel
+  
+  const stopDrag = () => {
+    isResizing.value = false
+    document.removeEventListener('mousemove', doDrag)
+    document.removeEventListener('mouseup', stopDrag)
+  }
+  
+  document.addEventListener('mousemove', doDrag)
+  document.addEventListener('mouseup', stopDrag)
 }
+
+// 暴露方法供外部调用
+defineExpose({
+  togglePanel,
+  isCollapsed
+})
 </script>
 
 <style scoped>
 .left-sidebar {
   height: calc(100vh - 52px); /* 减去标题栏和状态栏高度 */
-  background-color: #333333;
-  color: #cccccc;
+  background-color: var(--side-bar-background);
+  color: var(--side-bar-foreground);
   transition: width 0.2s ease;
   overflow: hidden;
-  border-right: 1px solid #252526;
+  border-right: 1px solid var(--side-bar-border);
   display: flex;
-}
-
-.left-sidebar.collapsed {
-  width: 40px;
+  position: relative;
 }
 
 .sidebar-toolbar {
   width: 40px;
-  background-color: #333333;
+  background-color: var(--tool-bar-background);
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 10px 0;
-  border-right: 1px solid #252526;
+  border-right: 1px solid var(--side-bar-border);
+  flex-shrink: 0;
 }
 
 .toolbar-item {
@@ -199,12 +258,29 @@ const setActivePanel = (panel: string) => {
 .sidebar-content-wrapper {
   flex-grow: 1;
   display: flex;
+  position: relative;
 }
 
 .sidebar-content {
   flex-grow: 1;
   padding: 10px;
   overflow-y: auto;
+  width: 100%;
+}
+
+.resize-handle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 5px;
+  height: 100%;
+  background-color: transparent;
+  cursor: col-resize;
+  z-index: 100;
+}
+
+.resize-handle:hover {
+  background-color: #007acc;
 }
 
 .sidebar-toggle {
@@ -214,13 +290,14 @@ const setActivePanel = (panel: string) => {
   transform: translateY(-50%);
   width: 15px;
   height: 30px;
-  background-color: #333333;
+  background-color: var(--side-bar-background);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   border-top-left-radius: 3px;
   border-bottom-left-radius: 3px;
+  z-index: 10;
 }
 
 .sidebar-toggle-collapsed {
@@ -230,6 +307,16 @@ const setActivePanel = (panel: string) => {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+}
+
+.toggle-icon {
+  font-size: 12px;
+  color: #888888;
+}
+
+.sidebar-toggle:hover .toggle-icon,
+.sidebar-toggle-collapsed:hover .toggle-icon {
+  color: #ffffff;
 }
 
 .sidebar-section {
@@ -281,15 +368,15 @@ const setActivePanel = (panel: string) => {
 .search-input {
   width: 100%;
   padding: 5px;
-  background-color: #3c3c3c;
-  border: 1px solid #3c3c3c;
-  color: #cccccc;
+  background-color: var(--input-background);
+  border: 1px solid var(--input-border);
+  color: var(--input-foreground);
   border-radius: 3px;
 }
 
 .search-result-item {
   padding: 5px 0;
-  border-bottom: 1px solid #3c3c3c;
+  border-bottom: 1px solid var(--side-bar-border);
 }
 
 .result-path {
@@ -299,7 +386,7 @@ const setActivePanel = (panel: string) => {
 
 .result-preview {
   font-size: 12px;
-  color: #cccccc;
+  color: var(--side-bar-foreground);
 }
 
 .debug-button {
@@ -314,12 +401,12 @@ const setActivePanel = (panel: string) => {
 
 .extension-item {
   padding: 5px 0;
-  border-bottom: 1px solid #3c3c3c;
+  border-bottom: 1px solid var(--side-bar-border);
 }
 
 .extension-name {
   font-size: 13px;
-  color: #cccccc;
+  color: var(--side-bar-foreground);
 }
 
 .extension-version {

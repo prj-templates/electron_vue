@@ -39,6 +39,9 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted } from 'vue'
+import { themeManager } from '../../themes/themeManager'
+
 const showNotifications = () => {
   console.log('Show notifications')
 }
@@ -66,13 +69,22 @@ const changeLineEnding = () => {
 const toggleFullScreen = () => {
   console.log('Toggle full screen')
 }
+
+// 监听主题变化并应用到状态栏
+onMounted(() => {
+  themeManager.subscribe((theme) => {
+    const root = document.documentElement;
+    root.style.setProperty('--status-bar-background', theme.colors.statusBarBackground);
+    root.style.setProperty('--status-bar-foreground', theme.colors.statusBarForeground);
+  });
+})
 </script>
 
 <style scoped>
 .status-bar {
   height: 22px;
-  background-color: #007acc;
-  color: white;
+  background-color: var(--status-bar-background, #007acc);
+  color: var(--status-bar-foreground, white);
   display: flex;
   justify-content: space-between;
   align-items: center;

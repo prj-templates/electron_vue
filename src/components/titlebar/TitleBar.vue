@@ -1,5 +1,5 @@
 <template>
-  <div class="title-bar">
+  <div class="title-bar" @dblclick="toggleMaximize">
     <div class="title-bar-drag-region"></div>
     <div class="title-bar-content">
       <!-- 应用图标和菜单 -->
@@ -28,7 +28,7 @@
       </div>
 
       <!-- 中间标题区域 -->
-      <div class="title-bar-center">
+      <div class="title-bar-center" @dblclick.stop>
         <span class="window-title">{{ title }}</span>
       </div>
 
@@ -45,7 +45,7 @@
         </div>
         <div class="window-controls">
           <button class="minimize-btn" @click="minimizeWindow">─</button>
-          <button class="maximize-btn" @click="maximizeWindow">□</button>
+          <button class="maximize-btn" @click="toggleMaximize" @dblclick.stop>{{ isMaximized ? '❐' : '□' }}</button>
           <button class="close-btn" @click="closeWindow">×</button>
         </div>
       </div>
@@ -57,9 +57,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import CommandPalette from './CommandPalette.vue'
 import ThemeSelector from './ThemeSelector.vue'
+import { themeManager } from '../../themes/themeManager'
 
 interface Props {
   title?: string
@@ -73,6 +74,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const commandPaletteRef = ref<InstanceType<typeof CommandPalette> | null>(null)
 const themeSelectorRef = ref<InstanceType<typeof ThemeSelector> | null>(null)
+const isMaximized = ref(false)
 
 // 菜单相关功能
 const toggleMenu = () => {
@@ -107,11 +109,11 @@ const minimizeWindow = () => {
   }
 }
 
-const maximizeWindow = () => {
+const toggleMaximize = () => {
   if (window.electron) {
     window.electron.maximizeWindow()
   } else {
-    console.log('Maximize window')
+    console.log('Toggle maximize window')
   }
 }
 
@@ -122,6 +124,34 @@ const closeWindow = () => {
     console.log('Close window')
   }
 }
+
+// 监听窗口状态变化
+const handleWindowMaximized = () => {
+  isMaximized.value = true
+}
+
+const handleWindowUnmaximized = () => {
+  isMaximized.value = false
+}
+
+onMounted(() => {
+  // 监听窗口最大化和取消最大化事件
+  if (window.electron) {
+    // 获取初始窗口状态
+    window.electron.isMaximized().then((max: boolean) => {
+      isMaximized.value = max
+    })
+  }
+  
+  // 监听窗口最大化和取消最大化事件
+  window.addEventListener('window-maximized', handleWindowMaximized)
+  window.addEventListener('window-unmaximized', handleWindowUnmaximized)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('window-maximized', handleWindowMaximized)
+  window.removeEventListener('window-unmaximized', handleWindowUnmaximized)
+})
 </script>
 
 <style scoped>
@@ -134,6 +164,17 @@ const closeWindow = () => {
   position: relative;
   -webkit-app-region: drag;
   border-bottom: 1px solid var(--title-bar-border, #000000);
+  user-select: none;
+}
+
+.title-bar-drag-region {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  -webkit-app-region: drag;
+  z-index: -1;
 }
 
 .title-bar-content {
@@ -168,6 +209,7 @@ const closeWindow = () => {
   align-items: center;
   cursor: pointer;
   font-size: 12px;
+  -webkit-app-region: no-drag;
 }
 
 .menu-item:hover {
@@ -179,6 +221,12 @@ const closeWindow = () => {
   left: 50%;
   transform: translateX(-50%);
   font-size: 12px;
+  max-width: 50%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  -webkit-app-region: drag;
+  cursor: default;
 }
 
 .title-bar-right {
@@ -196,6 +244,7 @@ const closeWindow = () => {
   align-items: center;
   cursor: pointer;
   font-size: 12px;
+  -webkit-app-region: no-drag;
 }
 
 .command-palette:hover,
@@ -218,6 +267,7 @@ const closeWindow = () => {
   cursor: pointer;
   outline: none;
   font-size: 14px;
+  -webkit-app-region: no-drag;
 }
 
 .window-controls button:hover {

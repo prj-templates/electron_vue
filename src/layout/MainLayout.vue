@@ -30,6 +30,7 @@ const tabBarRef = ref<InstanceType<typeof TabBar> | null>(null)
 
 // 暴露方法给外部使用
 defineExpose({
+  leftSidebarRef,
   rightSidebarRef
 })
 </script>

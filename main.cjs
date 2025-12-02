@@ -25,11 +25,35 @@ const createWindow = () => {
   // Load the local URL in development, or the built file in production.
   if (process.env.NODE_ENV === 'development') {
     mainWindow.loadURL('http://localhost:5173');
-    // Open the DevTools.
-    mainWindow.webContents.openDevTools();
+    // DevTools are now disabled by default
   } else {
     mainWindow.loadFile(path.join(__dirname, 'dist-web/index.html'));
   }
+  
+  // 监听窗口状态变化并通知渲染进程
+  mainWindow.on('maximize', () => {
+    if (mainWindow && mainWindow.webContents) {
+      mainWindow.webContents.send('window-maximized');
+    }
+  });
+  
+  mainWindow.on('unmaximize', () => {
+    if (mainWindow && mainWindow.webContents) {
+      mainWindow.webContents.send('window-unmaximized');
+    }
+  });
+  
+  mainWindow.on('enter-full-screen', () => {
+    if (mainWindow && mainWindow.webContents) {
+      mainWindow.webContents.send('window-enter-fullscreen');
+    }
+  });
+  
+  mainWindow.on('leave-full-screen', () => {
+    if (mainWindow && mainWindow.webContents) {
+      mainWindow.webContents.send('window-leave-fullscreen');
+    }
+  });
   
   // 处理窗口控制IPC消息
   ipcMain.on('window-minimize', () => {

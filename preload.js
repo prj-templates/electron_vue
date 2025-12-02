@@ -41,6 +41,27 @@ if (process.contextIsolated) {
         }
       }
     });
+    
+    // 监听主进程发送的窗口事件并转发给渲染进程
+    ipcRenderer.on('window-maximized', () => {
+      const event = new CustomEvent('window-maximized');
+      window.dispatchEvent(event);
+    });
+    
+    ipcRenderer.on('window-unmaximized', () => {
+      const event = new CustomEvent('window-unmaximized');
+      window.dispatchEvent(event);
+    });
+    
+    ipcRenderer.on('window-enter-fullscreen', () => {
+      const event = new CustomEvent('window-enter-fullscreen');
+      window.dispatchEvent(event);
+    });
+    
+    ipcRenderer.on('window-leave-fullscreen', () => {
+      const event = new CustomEvent('window-leave-fullscreen');
+      window.dispatchEvent(event);
+    });
   } catch (error) {
     console.error(error);
   }
@@ -58,6 +79,27 @@ if (process.contextIsolated) {
       }
     }
   };
+  
+  // 监听主进程发送的窗口事件并转发给渲染进程
+  ipcRenderer.on('window-maximized', () => {
+    const event = new CustomEvent('window-maximized');
+    window.dispatchEvent(event);
+  });
+  
+  ipcRenderer.on('window-unmaximized', () => {
+    const event = new CustomEvent('window-unmaximized');
+    window.dispatchEvent(event);
+  });
+  
+  ipcRenderer.on('window-enter-fullscreen', () => {
+    const event = new CustomEvent('window-enter-fullscreen');
+    window.dispatchEvent(event);
+  });
+  
+  ipcRenderer.on('window-leave-fullscreen', () => {
+    const event = new CustomEvent('window-leave-fullscreen');
+    window.dispatchEvent(event);
+  });
 }
 
 module.exports = {};

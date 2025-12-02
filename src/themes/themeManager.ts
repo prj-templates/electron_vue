@@ -59,7 +59,7 @@ export const themes: Theme[] = [
       editorBackground: '#1e1e1e',
       editorForeground: '#d4d4d4',
       
-      statusBarBackground: '#007acc',
+      statusBarBackground: '#333333', // 修改为与侧边栏一致的颜色
       statusBarForeground: '#ffffff',
       
       tabActiveBackground: '#1e1e1e',
@@ -127,7 +127,7 @@ export const themes: Theme[] = [
       editorBackground: '#0d2b4e',
       editorForeground: '#d4d4d4',
       
-      statusBarBackground: '#007acc',
+      statusBarBackground: '#1a3e6d', // 修改为与侧边栏一致的颜色
       statusBarForeground: '#ffffff',
       
       tabActiveBackground: '#0d2b4e',
