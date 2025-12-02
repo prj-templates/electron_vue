@@ -104,12 +104,13 @@ const addNewTab = () => {
   display: flex;
   flex-direction: column;
   height: 100%;
+  border: 1px solid var(--side-bar-border, #252526);
 }
 
 .tabs-container {
   display: flex;
-  background-color: #252526;
-  border-bottom: 1px solid #1a1a1a;
+  background-color: var(--tool-bar-background, #252526);
+  border-bottom: 1px solid var(--side-bar-border, #1a1a1a);
   height: 35px;
   overflow-x: auto;
 }
@@ -118,8 +119,8 @@ const addNewTab = () => {
   display: flex;
   align-items: center;
   padding: 0 10px;
-  background-color: #2d2d2d;
-  border-right: 1px solid #1a1a1a;
+  background-color: var(--tab-inactive-background, #2d2d2d);
+  border-right: 1px solid var(--side-bar-border, #1a1a1a);
   cursor: pointer;
   font-size: 12px;
   min-width: 120px;
@@ -127,12 +128,12 @@ const addNewTab = () => {
 }
 
 .tab:hover {
-  background-color: #3c3c3c;
+  background-color: var(--tab-inactive-background, #3c3c3c);
 }
 
 .tab.active {
-  background-color: #1e1e1e;
-  border-top: 1px solid #007acc;
+  background-color: var(--tab-active-background, #1e1e1e);
+  border-top: 1px solid var(--status-bar-background, #007acc);
 }
 
 .tab-icon {
@@ -164,35 +165,35 @@ const addNewTab = () => {
   display: flex;
   align-items: center;
   padding: 0 15px;
-  background-color: #252526;
+  background-color: var(--tool-bar-background, #252526);
   cursor: pointer;
   font-size: 16px;
   font-weight: bold;
 }
 
 .new-tab:hover {
-  background-color: #3c3c3c;
+  background-color: var(--tool-bar-background, #3c3c3c);
 }
 
 .tab-content {
   flex-grow: 1;
-  background-color: #1e1e1e;
+  background-color: var(--editor-background, #1e1e1e);
   overflow: auto;
 }
 
 .content-area {
   padding: 20px;
-  color: #d4d4d4;
+  color: var(--editor-foreground, #d4d4d4);
   height: 100%;
 }
 
 .content-area h2 {
   margin-top: 0;
-  color: #cccccc;
+  color: var(--editor-foreground, #cccccc);
 }
 
 .welcome-content h1 {
-  color: #ffffff;
+  color: var(--editor-foreground, #ffffff);
   text-align: center;
 }
 

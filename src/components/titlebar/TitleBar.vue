@@ -34,25 +34,31 @@
 
       <!-- 右侧控制按钮 -->
       <div class="title-bar-right">
-        <div class="command-palette" @click="openCommandPalette">
-          <span>⌘ Palette</span>
+        <div class="icon-button" @click="openCommandPalette" title="Command Palette">
+          <span class="icon-text">⌘</span>
         </div>
-        <div class="theme-selector" @click="openThemeSelector">
-          <span>Theme</span>
+        <div class="icon-button" @click="openThemeSelector" title="Themes">
+          <span class="icon-text">☀</span>
         </div>
-        <div class="layout-selector" @click="toggleLayoutSelector">
-          <span>Layout</span>
+        <div class="icon-button" @click="openLayoutControl" title="Layout">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+            <rect x="1" y="1" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1" fill="none"/>
+            <rect x="9" y="1" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1" fill="none"/>
+            <rect x="1" y="9" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1" fill="none"/>
+            <rect x="9" y="9" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1" fill="none"/>
+          </svg>
         </div>
         <div class="window-controls">
-          <button class="minimize-btn" @click="minimizeWindow">─</button>
-          <button class="maximize-btn" @click="toggleMaximize" @dblclick.stop>{{ isMaximized ? '❐' : '□' }}</button>
-          <button class="close-btn" @click="closeWindow">×</button>
+          <button class="minimize-btn" @click="minimizeWindow" title="Minimize">─</button>
+          <button class="maximize-btn" @click="toggleMaximize" @dblclick.stop title="Maximize/Restore">{{ isMaximized ? '❐' : '□' }}</button>
+          <button class="close-btn" @click="closeWindow" title="Close">×</button>
         </div>
       </div>
     </div>
     
     <CommandPalette ref="commandPaletteRef" />
     <ThemeSelector ref="themeSelectorRef" />
+    <LayoutControl ref="layoutControlRef" />
   </div>
 </template>
 
@@ -60,6 +66,7 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import CommandPalette from './CommandPalette.vue'
 import ThemeSelector from './ThemeSelector.vue'
+import LayoutControl from './LayoutControl.vue'
 import { themeManager } from '../../themes/themeManager'
 
 interface Props {
@@ -74,6 +81,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const commandPaletteRef = ref<InstanceType<typeof CommandPalette> | null>(null)
 const themeSelectorRef = ref<InstanceType<typeof ThemeSelector> | null>(null)
+const layoutControlRef = ref<InstanceType<typeof LayoutControl> | null>(null)
 const isMaximized = ref(false)
 
 // 菜单相关功能
@@ -95,9 +103,11 @@ const openThemeSelector = () => {
   }
 }
 
-// 布局选择器
-const toggleLayoutSelector = () => {
-  console.log('Toggle layout selector')
+// 布局控制
+const openLayoutControl = () => {
+  if (layoutControlRef.value) {
+    layoutControlRef.value.openControl()
+  }
 }
 
 // 窗口控制
@@ -134,8 +144,17 @@ const handleWindowUnmaximized = () => {
   isMaximized.value = false
 }
 
+// 根据当前主题更新主题图标
+const updateThemeIcon = () => {
+  const theme = themeManager.getCurrentTheme()
+  const themeIcon = document.querySelector('.theme-selector .icon-text')
+  if (themeIcon) {
+    themeIcon.textContent = theme.type === 'dark' ? '🌙' : '☀'
+  }
+}
+
 onMounted(() => {
-  // 监听窗口最大化和取消最大化事件
+  // 监听窗口状态变化事件
   if (window.electron) {
     // 获取初始窗口状态
     window.electron.isMaximized().then((max: boolean) => {
@@ -146,6 +165,12 @@ onMounted(() => {
   // 监听窗口最大化和取消最大化事件
   window.addEventListener('window-maximized', handleWindowMaximized)
   window.addEventListener('window-unmaximized', handleWindowUnmaximized)
+  
+  // 监听主题变化以更新图标
+  themeManager.subscribe(updateThemeIcon)
+  
+  // 初始化主题图标
+  updateThemeIcon()
 })
 
 onUnmounted(() => {
@@ -235,22 +260,23 @@ onUnmounted(() => {
   height: 100%;
 }
 
-.command-palette,
-.theme-selector,
-.layout-selector {
-  padding: 0 8px;
+.icon-button {
+  width: 30px;
   height: 100%;
   display: flex;
   align-items: center;
+  justify-content: center;
   cursor: pointer;
-  font-size: 12px;
   -webkit-app-region: no-drag;
 }
 
-.command-palette:hover,
-.theme-selector:hover,
-.layout-selector:hover {
+.icon-button:hover {
   background-color: rgba(255, 255, 255, 0.1);
+}
+
+.icon-text {
+  font-size: 14px;
+  color: var(--title-bar-foreground, white);
 }
 
 .window-controls {

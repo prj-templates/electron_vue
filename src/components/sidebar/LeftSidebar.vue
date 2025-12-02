@@ -4,7 +4,7 @@
     :class="{ collapsed: isCollapsed }"
     :style="{ width: isCollapsed ? '40px' : sidebarWidth + 'px' }"
   >
-    <div class="sidebar-toolbar">
+    <div class="sidebar-toolbar" ref="toolbarRef">
       <div 
         class="toolbar-item" 
         :class="{ active: activePanel === 'explorer' }"
@@ -154,12 +154,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 
 const isCollapsed = ref(false)
 const activePanel = ref('explorer')
 const sidebarWidth = ref(250)
 const isResizing = ref(false)
+const toolbarRef = ref<HTMLDivElement | null>(null)
 
 // 切换面板显示/隐藏
 const togglePanel = (panel: string) => {
@@ -205,10 +206,25 @@ const startResizing = (e: MouseEvent) => {
   document.addEventListener('mouseup', stopDrag)
 }
 
+// 监听活动栏显示/隐藏事件
+const handleLayoutPanelToggle = (event: Event) => {
+  const customEvent = event as CustomEvent
+  const { panel, visible } = customEvent.detail
+  
+  if (panel === 'activityBar' && toolbarRef.value) {
+    toolbarRef.value.style.display = visible ? 'flex' : 'none'
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('layout-panel-toggle', handleLayoutPanelToggle as EventListener)
+})
+
 // 暴露方法供外部调用
 defineExpose({
   togglePanel,
-  isCollapsed
+  isCollapsed,
+  $el: toolbarRef
 })
 </script>
 
@@ -222,6 +238,7 @@ defineExpose({
   border-right: 1px solid var(--side-bar-border);
   display: flex;
   position: relative;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
 }
 
 .sidebar-toolbar {
@@ -259,6 +276,7 @@ defineExpose({
   flex-grow: 1;
   display: flex;
   position: relative;
+  border-left: 1px solid var(--side-bar-border);
 }
 
 .sidebar-content {
@@ -272,15 +290,16 @@ defineExpose({
   position: absolute;
   top: 0;
   right: 0;
-  width: 5px;
+  width: 8px;
   height: 100%;
   background-color: transparent;
   cursor: col-resize;
   z-index: 100;
+  transition: background-color 0.2s ease;
 }
 
 .resize-handle:hover {
-  background-color: #007acc;
+  background-color: rgba(0, 122, 204, 0.5);
 }
 
 .sidebar-toggle {

@@ -102,6 +102,7 @@ defineExpose({
   background-color: var(--side-bar-background);
   color: var(--side-bar-foreground);
   border-left: 1px solid var(--side-bar-border);
+  border-right: 1px solid var(--side-bar-border);
   transition: transform 0.2s ease;
   display: flex;
   position: relative;
@@ -207,6 +208,7 @@ defineExpose({
   align-items: center;
   justify-content: center;
   border-left: 1px solid var(--side-bar-border);
+  border-right: 1px solid var(--side-bar-border);
 }
 
 .sidebar-toggle:hover {
