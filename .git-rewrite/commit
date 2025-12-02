@@ -1,0 +1,6 @@
+tree 4c0527ea8200474704daa9b187139e48b3e08dc3
+parent 84e9d3bbf913beece58675b44fcf2c71c1bfde00
+author Yi Jianlong <jianlong.yi@outlook.com> 1764646192 +0800
+committer Yi Jianlong <jianlong.yi@outlook.com> 1764646192 +0800
+
+Update gitignore to exclude build directories and add gitattributes for line ending normalization
